@@ -167,50 +167,60 @@ ul {padding-left:1.5rem;}
 .popup-content img {max-width:100%; margin-bottom:0.5rem;}
 .close {float:right; cursor:pointer; font-size:1.2rem;}
 
-/* Languages circles */
-.tooltip {
+/* Languages circles - now clickable for modal */
+.lang-circle {
   position:relative; display:inline-block; cursor:pointer; width:50px; height:50px; border-radius:50%; background-color:#F68A25; color:white;
   text-align:center; line-height:50px; font-size:1.2rem; margin-right:0.3rem; transition: transform 0.3s ease;
+  border: none;
 }
-.tooltip:hover {transform: scale(1.2) translateY(-5px);}
+.lang-circle:hover {transform: scale(1.2) translateY(-5px);}
 
-.tooltip .tooltiptext {
- visibility: hidden;
-  opacity: 0;
-  position: absolute;
-  z-index: 10;
-  bottom: 125%; /* sopra il cerchio */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #34429B;
-  color: #fff;
+/* Language Modal */
+.lang-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.lang-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 1rem;
+  text-align: left;
+  position: relative;
+  color: #222;
+  font-family: 'timeless', serif;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.lang-modal-flag {
+  font-size: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
-  border-radius: 6px;
-  padding: 0.7rem 1rem;
+}
+.lang-modal-text {
   font-size: 0.9rem;
-  line-height: 1.4;
-  white-space: normal;        
-  word-wrap: break-word;      
-  box-sizing: border-box;
-  max-width: 90vw;      /* mai più largo dello schermo */
-  min-width: 200px;     /* mai troppo stretto */
-  transition: opacity 0.3s;
-
+  line-height: 1.5;
+  margin-bottom: 0;
 }
-.tooltip:hover .tooltiptext, .tooltip:focus .tooltiptext {
-  visibility: visible;
-  opacity: 1;
+.lang-modal .close {
+  float: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #999;
+  margin-bottom: 1rem;
 }
-@media (max-width: 600px) {
-  .tooltip .tooltiptext {
-    bottom: auto;
-    top: 125%;
-    max-width: 95vw;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.85em;
-    padding: 0.6em 0.8em;
-  }
+.lang-modal .close:hover {
+  color: #F68A25;
 }
 
 @media(max-width:600px){.hero{text-align:center;padding:2rem 1rem;}}
@@ -333,7 +343,59 @@ apply my skills and knowledge to projects combining research, public action, and
   <a id="edu-popup-download" href="Chiara Zotti_Mémoire ULB.pdf" class="btn" download><i>👆</i> Download Document</a>
 </div>
 
+<!-- Language Modal -->
+<div class="lang-modal" id="lang-modal">
+<div class="lang-modal-content">
+  <span class="close" onclick="closeLangModal()">&times;</span>
+  <div class="lang-modal-flag" id="lang-modal-flag"></div>
+  <div class="lang-modal-text" id="lang-modal-text"></div>
+</div>
+</div>
+
 <script>
+// Language Modal Functions
+const languageData = {
+  en: {
+    '🇮🇹': 'Born and raised in Turin. Feeling home when I\'m as close as possible to the Alps',
+    '🇫🇷': 'Brussels is home since 2023. Here I started learning French and I keep learning day by day',
+    '🇬🇧': '(Nothing interesting here. I just always studied the language and worked in English)',
+    '🇸🇪': 'I was an exchange student in 2008-09 in Sweden. For a year, I lived with a Swedish family above the Polar Circle where I learnt the language and experienced deep dark winter and fully sunny summer',
+    '🇵🇹': 'In 2021 I moved to Lisbon where I stayed a whole year. While working fully remotely, I enjoyed the ocean, the music and a big new portuguese family with whom I learnt the language (intermediate level)',
+    '?': '...what\'s next?'
+  },
+  fr: {
+    '🇮🇹': 'Née et grandie à Turin. Je me sens chez moi quand je suis proche des Alpes',
+    '🇫🇷': 'Bruxelles est chez moi depuis 2023. J\'ai commencé à apprendre le français ici et je continue chaque jour',
+    '🇬🇧': '(Rien d\'intéressant ici. J\'ai toujours étudié et travaillé en anglais)',
+    '🇸🇪': 'J\'ai été étudiante à l\'étranger en 2008-09 en Suède. J\'ai vécu un an avec une famille suédoise au-dessus du Cercle Polaire Arctique, où j\'ai appris la langue et vécu l\'hiver sombre et l\'été sans nuit',
+    '🇵🇹': 'En 2021, j\'ai déménagé à Lisbonne où je suis restée un an. En travaillant à distance, j\'ai profité de l\'océan, de la musique et d\'une grande famille portugaise avec qui j\'ai appris la langue (niveau intermédiaire)',
+    '?': '...quelle sera la prochaine?'
+  }
+};
+
+function openLangModal(flag) {
+  const modal = document.getElementById("lang-modal");
+  const flagElement = document.getElementById("lang-modal-flag");
+  const textElement = document.getElementById("lang-modal-text");
+  
+  flagElement.textContent = flag;
+  textElement.textContent = languageData[currentLang][flag];
+  
+  modal.style.display = "flex";
+}
+
+function closeLangModal() {
+  document.getElementById("lang-modal").style.display = "none";
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById("lang-modal");
+  if (event.target === modal) {
+    closeLangModal();
+  }
+});
+
 // Popup Education con immagini dinamiche
 function closeEduPopup(){
   document.getElementById("edu-popup").style.display="none";
@@ -432,12 +494,12 @@ const content = {
     skillsLabel: "Skills",
     languagesLabel: "Languages:",
     softwaresLabel: "Softwares:",
-    languagesList: `<span class="tooltip">🇮🇹<span class="tooltiptext">Born and raised in Turin. Feeling home when I'm as close as possible to the Alps</span></span>
-      <span class="tooltip">🇫🇷<span class="tooltiptext">Brussel is home since 2023. Here I started learning French and I keep learning day by day</span></span>
-      <span class="tooltip">🇬🇧<span class="tooltiptext">(Nothing interesting here. I just always studied the language and worked in English)</span></span>
-      <span class="tooltip">🇸🇪<span class="tooltiptext">I was an exchange student in 2008-09 in Sweden. For a year, I lived with a Swedish family above the Polar Circle where I learnt the language and experienced deep dark winter and fully sunny summer</span></span>
-      <span class="tooltip">🇵🇹<span class="tooltiptext">In 2021 I moved to Lisbon where I stayed a whole year. While working fully remotely, I enjoyed the ocean, the music and a big new portuguese family with whom I learnt the language (intermediate level)</span></span>
-      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: timeless; font-weight: normal;">...what's next?</span></span>`,
+    languagesList: `<button class="lang-circle" onclick="openLangModal('🇮🇹')">🇮🇹</button>
+      <button class="lang-circle" onclick="openLangModal('🇫🇷')">🇫🇷</button>
+      <button class="lang-circle" onclick="openLangModal('🇬🇧')">🇬🇧</button>
+      <button class="lang-circle" onclick="openLangModal('🇸🇪')">🇸🇪</button>
+      <button class="lang-circle" onclick="openLangModal('🇵🇹')">🇵🇹</button>
+      <button class="lang-circle" onclick="openLangModal('?')" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?</button>`,
     softwaresList: "Adobe Id, Ai, Ps; Wordpress; QGIS; AutoCAD; MS Office / Mac OS",
   eduPopupTitle: `Master thesis title: <br> “Permanent perspectives in temporary occupations. Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development”`,
   eduPopupText: `What remains when a temporary occupation ends? <br>This thesis investigates the outcomes of temporary occupations in Brussels, exploring how public institutions, associations, and informal groups shape and support these practices. Through case studies and fieldwork, it examines how temporariness is defined, implemented, and connected to long-term urban planning. The research highlights the role of public policies and suggests strategies for planning and evaluating temporary uses, advocating for intentional support of transitions toward permanence.`,
@@ -484,12 +546,12 @@ const content = {
     skillsLabel: "Compétences",
     languagesLabel: "Langues:",
     softwaresLabel: "Logiciels:",
-    languagesList: `<span class="tooltip">🇮🇹<span class="tooltiptext">Née et grandie à Turin. Je me sens chez moi quand je suis proche des Alpes</span></span>
-      <span class="tooltip">🇫🇷<span class="tooltiptext">Bruxelles est chez moi depuis 2023. J'ai commencé à apprendre le français ici et je continue chaque jour</span></span>
-      <span class="tooltip">🇬🇧<span class="tooltiptext">(Rien d'intéressant ici. J'ai toujours étudié et travaillé en anglais)</span></span>
-      <span class="tooltip">🇸🇪<span class="tooltiptext">J'ai été étudiante à l'étranger en 2008-09 en Suède. J'ai vécu un an avec une famille suédoise au-dessus du Cercle Polaire Arctique, où j'ai appris la langue et vécu l'hiver sombre et l'été sans nuit</span></span>
-      <span class="tooltip">🇵🇹<span class="tooltiptext">En 2021, j'ai déménagé à Lisbonne où je suis restée un an. En travaillant à distance, j'ai profité de l'océan, de la musique et d'une grande famille portugaise avec qui j'ai appris la langue (niveau intermédiaire)</span></span>
-      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: timeless; font-weight: normal;">...quelle sera la prochaine?</span></span>`,
+    languagesList: `<button class="lang-circle" onclick="openLangModal('🇮🇹')">🇮🇹</button>
+      <button class="lang-circle" onclick="openLangModal('🇫🇷')">🇫🇷</button>
+      <button class="lang-circle" onclick="openLangModal('🇬🇧')">🇬🇧</button>
+      <button class="lang-circle" onclick="openLangModal('🇸🇪')">🇸🇪</button>
+      <button class="lang-circle" onclick="openLangModal('🇵🇹')">🇵🇹</button>
+      <button class="lang-circle" onclick="openLangModal('?')" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?</button>`,
     softwaresList: "Adobe Id, Ai, Ps; Wordpress; QGIS; AutoCAD; MS Office / Mac OS",
   eduPopupTitle: `Titre du mémoire : <br> “Permanent perspectives in temporary occupations. <br> Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development” <br> “Perspectives permanentes dans les occupations temporaires. <br> Explorer le rôle des politiques publiques dans l’orientation de la préfiguration à long terme du développement urbain de Bruxelles”`,
   eduPopupText: `Que reste-t-il lorsqu’une occupation temporaire prend fin ? <br>Ce mémoire analyse les résultats des occupations temporaires à Bruxelles, en explorant comment les institutions publiques, les associations et les groupes informels façonnent et soutiennent ces pratiques. À travers des études de cas et du travail de terrain, il examine comment la temporalité est définie, mise en œuvre et reliée à la planification urbaine à long terme. La recherche met en lumière le rôle des politiques publiques et propose des stratégies pour planifier et évaluer les usages temporaires, en plaidant pour un accompagnement intentionnel des transitions vers la permanence.`,
