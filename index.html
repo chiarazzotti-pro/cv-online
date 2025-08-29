@@ -1,6 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- HEADER BANNER & COLLAGE STYLES -->
+<style>
+/* Banner orizzontale sfumato */
+#header-banner {
+  width: 100vw;
+  max-width: 100%;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+#header-banner img {
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7) contrast(1.1);
+}
+#header-banner .overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, #fff8 0%, #fff4 60%, #fff0 100%);
+  pointer-events: none;
+}
+
+/* Collage geometrico a bande */
+#header-collage {
+  width: 100vw;
+  max-width: 100%;
+  height: 180px;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+#header-collage .collage-img {
+  flex: 1 1 0;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+  mix-blend-mode: multiply;
+}
+#header-collage .collage-img:nth-child(2) {
+  opacity: 0.65;
+  filter: grayscale(0.2) contrast(1.1);
+}
+#header-collage .collage-img:nth-child(3) {
+  opacity: 0.8;
+  filter: brightness(1.1) contrast(1.2);
+}
+</style>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Chiara Zotti – Online CV</title>
@@ -64,7 +115,7 @@ header {
   font-size:0.7rem;
   font-family:"Roboto Mono", monospace;
 }
-.btn i {margin-right:0.3rem;}
+.btn i {margin-right:0.3rem;} /* icona prima del testo */
 .btn:hover {background:#F68A25; color:white;}
 
 .small-btn {
@@ -124,17 +175,10 @@ ul {padding-left:1.5rem;}
 }
 .tooltip:hover {transform: scale(1.2) translateY(-5px);}
 
-/* Tooltiptext responsive fix */
 .tooltip .tooltiptext {
-  max-width: 95vw;
-  width: max-content;
-  min-width: 120px;
-  box-sizing: border-box;
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: break-word;
   line-height: 1.1;
   visibility: hidden;
+  width: 220px;
   background-color: #34429B;
   color: #fff;
   text-align: center;
@@ -154,15 +198,23 @@ ul {padding-left:1.5rem;}
   visibility: visible;
   opacity: 1;
 }
-@media (max-width: 600px) {
+@media (max-width: 500px) {
   .tooltip .tooltiptext {
-    width: 96vw;
-    min-width: 0;
+    width: 90vw;
+    min-width: 160px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 1em;
+    font-size: 0.9em;
     padding: 0.7em 0.3em;
   }
+}
+/* Prevenire overflow orizzontale: se tooltip troppo vicino al bordo, spostalo */
+.tooltip {
+  position: relative;
+}
+.tooltip .tooltiptext {
+  max-width: 95vw;
+  box-sizing: border-box;
 }
 
 @media(max-width:600px){.hero{text-align:center;padding:2rem 1rem;}}
@@ -172,8 +224,10 @@ ul {padding-left:1.5rem;}
 
 <!-- HEADER BANNER: banner singolo con sovrapposizione creativa -->
 <div id="header-banner" style="position:relative;">
+
 <img src="20250107_135005.jpg" alt="Banner cover" style="width:100vw; height:100%; object-fit:cover; filter:brightness(0.93) contrast(1.08);">
 <div class="overlay"></div>
+
 </div>
 
 <header>
@@ -219,6 +273,7 @@ apply my skills and knowledge to projects combining research, public action, and
 </div>
 </section>
 
+</section>
 <section>
   <h3 id="edu-title">Education</h3>
   <div id="education-list">
@@ -238,6 +293,7 @@ apply my skills and knowledge to projects combining research, public action, and
     </ul>
   </div>
 </section>
+</section>
 
 <section>
 <h3 id="skills-title">Skills</h3>
@@ -249,10 +305,13 @@ apply my skills and knowledge to projects combining research, public action, and
   <b id="softwares-label"></b><br>
   <span id="softwares-list"></span>
 </div>
+
+<!-- Download after skills -->
 <div style="text-align:center; margin:1.5rem 0;">
 <a id="cv-download-bottom" href="cv_chiara_zotti_en.pdf" class="btn"><i>👆</i> <span id="cv-download-label-bottom">Download CV</span></a></div>
 </section>
 
+<!-- Footer with contacts only -->
 <div class="footer">
 ✉ <a href="mailto:chiarazzotti@gmail.com">chiarazzotti@gmail.com</a> | <a href="https://www.linkedin.com/in/chiara-zotti-788602105" target="_blank">LinkedIn</a><br>
 <div class="footer" style="font-size: 70%;">© 2025 Chiara Zotti
@@ -279,6 +338,7 @@ apply my skills and knowledge to projects combining research, public action, and
 </div>
 
 <script>
+// Popup Education con immagini dinamiche
 function closeEduPopup(){
   document.getElementById("edu-popup").style.display="none";
 }
@@ -301,6 +361,7 @@ let currentLang = 'en';
 function openEduPopup(type){
   document.getElementById("edu-popup").style.display="flex";
   currentPopupType = type;
+  // Scegli immagini
   let images = type === 'arch' ? archImages : eduImages;
   const imagesDiv = document.getElementById('edu-popup-images');
   imagesDiv.innerHTML = images.map((src,i) => `<img src='${src}' alt='${type} photo ${i+1}'>`).join('');
@@ -320,6 +381,7 @@ function openEduPopup(type){
   }
 }
 
+// Carousel logic
 let eduCurrent = 0;
 function updateEduCarousel() {
   const imagesDiv = document.getElementById('edu-popup-images');
@@ -338,19 +400,16 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 
-// ---- CONTENUTI LINGUE ----
+// Language switcher and CV download
 const content = {
   en: {
     "header-title": "Hello! Welcome to my online CV",
-    tagline: "Intercultural approach – Right to the city – Urban transition",
-    about: "I have developed several years of experience in intercultural projects before specializing in urban planning. My goal is to apply my skills and knowledge to projects combining research, public action, and civic engagement.",
-    "exp-title": "Professional Experience",
     experienceList: `<ul>
       <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b>WEP, World Education Program</b> – Content creation & website development</li>
       <li><span style='color:#34429B; font-weight: bold;'>2024</span> <b>Internship perspective.brussels</b> – Guichet des occupations temporaires</li>
       <li><span style='color:#34429B; font-weight: bold;'>2017-23</span> <b>WEP, World Education Program</b>
         <ul>
-          <li>event planner: national meetings &gt; 1500 participants</li>
+          <li>event planner: national meetings > 1500 participants</li>
           <li>trainer and group leader for adults and international students</li>
           <li>project manager <a href='https://www.wep.it/wep-buddy' target='_blank'>WEP Buddy</a>: students community on national level</li>
           <li>articles writer: <a href='https://take-the-leap.wep.org/it/' target='_blank'>take the leap</a></li>
@@ -360,90 +419,94 @@ const content = {
       </li>
       <li><span style='color:#34429B; font-weight: bold;'>2016-17</span> <b>ASF, Architettura Senza Frontiere</b> –  Visual communication projects in a center for migration</li>
     </ul>`,
-    "edu-title": "Education",
     educationList: `<ul>
-      <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b>Specialized Master in transition urbanism and regional planning</b> – ULB Brussels <button id='btn-more-master' class='btn small-btn' onclick="openEduPopup('master')">More</button></li>
+      <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b> Specialized Master in transition urbanism and regional planning</b> – ULB Brussels <button id='btn-more-master' class='btn small-btn' onclick="openEduPopup('master')">More</button></li>
       <li><span style='color:#34429B; font-weight: bold;'>2020</span> <b>Strategic communication, branding, copywriting</b> – Pennamontata.com</li>
       <li><span style='color:#34429B; font-weight: bold;'>2019</span> <b>Visual Thinking Methodology</b> – Scribing.it</li>
       <li><span style='color:#34429B; font-weight: bold;'>2013-16</span> <b>Master degree in Architecture “Costruzione città”</b> – Polytechnic University of Turin <button id='btn-more-arch' class='btn small-btn' onclick="openEduPopup('arch')">More</button></li>
     </ul>`,
+    cvDownload: "Download CV",
+    cvFile: "cv_chiara_zotti_en.pdf",
+    tagline: "Intercultural approach – Right to the city – Temporary urbanism",
+    about: "I have several years of experience in intercultural education and communication. With a background in architecture, I specialized in urbanism and recently completed an Advanced Master in urban and regional development at Université Libre de Bruxelles, focusing on temporary occupations, the right to the city, and the collaboration between administrations and citizens. <br> I enjoy immersing myself in new environments and exchanging insights with communities. My goal is to apply an interdisciplinary perspective to projects at the intersection of research, public action, and civic engagement.",
+  "exp-title": "Professional Experience",
+  experience: "2023-25 WEP, World Education Program – Content creation & website development; 2024 Internship @perspective.brussels – Guichet des occupations temporaires; 2017-23 WEP, World Education Program: event planner: national meetings > 1500 participants, trainer and group leader for adults and international students, project manager WEP Buddy: students community on national level, articles writer: take the leap, co-producer of podcast exCHANGE, visual communication designer; 2016-17 ASF, Architettura Senza Frontiere – Visual communication projects in a center for migration",
+    "edu-title": "Education",
+    education: "Specialized Master in transition urbanism and regional planning – ULB Brussels; Strategic communication, branding, copywriting – Pennamontata.com; Visual Thinking Methodology – Scribing.it; Master degree in Architecture “Costruzione città” – Polytechnic University of Turin",
     skillsLabel: "Skills",
     languagesLabel: "Languages:",
     softwaresLabel: "Softwares:",
-    languagesList: `
-      <span class="tooltip">🇮🇹<span class="tooltiptext">Born and raised in Turin. Feeling home when I'm as close as possible to the Alps.</span></span>
-      <span class="tooltip">🇫🇷<span class="tooltiptext">Brussels is home since 2023. Here I started learning French and I keep learning day by day.</span></span>
-      <span class="tooltip">🇬🇧<span class="tooltiptext">I've always studied and worked in English.</span></span>
-      <span class="tooltip">🇸🇪<span class="tooltiptext">I was an exchange student in 2008-09 in Sweden. For a year, I lived with a Swedish family above the Polar Circle where I learnt the language and culture.</span></span>
-      <span class="tooltip">🇵🇹<span class="tooltiptext">In 2021 I moved to Lisbon for a year. While working fully remotely, I enjoyed the ocean, the music and learned Portuguese.</span></span>
-      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: roboto mono, monospace; background:#34429B;">And more!</span></span>
-    `,
+    languagesList: `<span class="tooltip">🇮🇹<span class="tooltiptext">Born and raised in Turin. Feeling home when I'm as close as possible to the Alps</span></span>
+      <span class="tooltip">🇫🇷<span class="tooltiptext">Brussel is home since 2023. Here I started learning French and I keep learning day by day</span></span>
+      <span class="tooltip">🇬🇧<span class="tooltiptext">(Nothing interesting here. I just always studied the language and worked in English)</span></span>
+      <span class="tooltip">🇸🇪<span class="tooltiptext">I was an exchange student in 2008-09 in Sweden. For a year, I lived with a Swedish family above the Polar Circle where I learnt the language and experienced deep dark winter and fully sunny summer</span></span>
+      <span class="tooltip">🇵🇹<span class="tooltiptext">In 2021 I moved to Lisbon where I stayed a whole year. While working fully remotely, I enjoyed the ocean, the music and a big new portuguese family with whom I learnt the language (intermediate level)</span></span>
+      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: timeless; font-weight: normal;">...what's next?</span></span>`,
     softwaresList: "Adobe Id, Ai, Ps; Wordpress; QGIS; AutoCAD; MS Office / Mac OS",
-    cvDownload: "Download CV",
-    cvFile: "cv_chiara_zotti_en.pdf",
-    eduPopupTitle: `Master thesis title: <br>“Permanent perspectives in temporary occupations. Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development”`,
-    eduPopupText: `What remains when a temporary occupation ends? <br>This thesis investigates the outcomes of temporary occupations in Brussels, exploring how public institutions, associations, and informal actors shape long-term urban transitions and policies.`,
-    eduPopupFile: "Chiara Zotti_Mémoire ULB.pdf",
-    eduPopupDownload: "Download thesis",
-    archPopupTitle: `Master thesis title: <br>“Comunicare l’architettura: non solo visione. Percorso di visita del Castello del Valentino per le disabilità visive”<br>“Communicating architecture: not just vision. A tactile visit route for the visually impaired at Valentino Castle”`,
-    archPopupText: `This thesis explores how visually impaired people can perceive and understand architecture through senses other than sight. Starting from the workshop “Drawings for hands. The Valentino Castle” it investigates multi-sensory approaches to architectural communication.`,
-    archPopupFile: "Chiara Zotti_Tesi Politecnico.pdf",
-    archPopupDownload: "Download thesis",
-    "about-title": "About"
+  eduPopupTitle: `Master thesis title: <br> “Permanent perspectives in temporary occupations. Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development”`,
+  eduPopupText: `What remains when a temporary occupation ends? <br>This thesis investigates the outcomes of temporary occupations in Brussels, exploring how public institutions, associations, and informal groups shape and support these practices. Through case studies and fieldwork, it examines how temporariness is defined, implemented, and connected to long-term urban planning. The research highlights the role of public policies and suggests strategies for planning and evaluating temporary uses, advocating for intentional support of transitions toward permanence.`,
+  eduPopupFile: "Chiara Zotti_Mémoire ULB.pdf",
+  eduPopupDownload: "Download thesis",
+  archPopupTitle: `Master thesis title: <br> “Comunicare l’architettura: non solo visione. <br> Percorso di visita del Castello del Valentino per le disabilità visive” <br> “Communicating architecture: more than just vision. <br> A visit of the Valentino castle for visually impaired people”`,
+  archPopupText: `This thesis explores how visually impaired people can perceive and understand architecture through senses other than sight. Starting from the workshop “Drawings for hands. The Valentino Castle in relief” at the Polytechnic University of Turin, the study investigates haptic and tactile experiences as tools for inclusive design. It combines theoretical analysis of perceptive barriers with practical case studies and culminates in a proposal for a more accessible visit to Valentino Castle. The project “The Guide for the Guide” provides museum guides with educational tools to enhance the experience for all visitors, showing that designing for inclusivity benefits everyone.`,
+  archPopupFile: "Chiara Zotti_Tesi Politecnico.pdf", 
+  archPopupDownload: "Download thesis",
+  "about-title": "About",
+
   },
   fr: {
     "header-title": "Bonjour ! Bienvenue sur mon CV en ligne",
-    tagline: "Approche interculturelle – Droit à la ville – Urbanisme transitoire",
-    about: "J’ai plusieurs années d’expérience dans des projets interculturels avant de me spécialiser en urbanisme. Mon objectif est d’appliquer mes compétences et connaissances à des projets liant recherche, action publique et engagement citoyen.",
-    "exp-title": "Expérience professionnelle",
     experienceList: `<ul>
       <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b>WEP, World Education Program</b> – Création de contenu & développement web</li>
       <li><span style='color:#34429B; font-weight: bold;'>2024</span> <b>Stage perspective.brussels</b> – Guichet des occupations temporaires</li>
       <li><span style='color:#34429B; font-weight: bold;'>2017-23</span> <b>WEP, World Education Program</b>
         <ul>
-          <li>planificatrice d'événements : rencontres nationales &gt; 1500 participants</li>
+          <li>planificatrice d'événements : rencontres nationales > 1500 participants</li>
           <li>formatrice et responsable de groupes d'adultes et d'étudiants internationaux</li>
           <li>responsable de projet <a href='https://www.wep.it/wep-buddy' target='_blank'>WEP Buddy</a> : communauté d'étudiants au niveau national</li>
           <li>rédactrice d'articles : <a href='https://take-the-leap.wep.org/it/' target='_blank'>take the leap</a></li>
-          <li>co-productrice du podcast <a href='https://take-the-leap.wep.org/it/exchange-podcast/' target='_blank'>exCHANGE</a></li>
+          <li>co-productrice podcast <a href='https://take-the-leap.wep.org/it/exchange-podcast/' target='_blank'>exCHANGE</a></li>
           <li>designer en communication visuelle</li>
         </ul>
       </li>
       <li><span style='color:#34429B; font-weight: bold;'>2016-17</span> <b>ASF, Architettura Senza Frontiere</b> –  Projets de communication visuelle dans un centre d'accueil pour migrants</li>
     </ul>`,
-    "edu-title": "Formation",
     educationList: `<ul>
-      <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b>Master de spécialisation en urbanisme et aménagement du territoire</b> – ULB Bruxelles <button id='btn-more-master' class='btn small-btn' onclick="openEduPopup('master')">Plus</button></li>
+      <li><span style='color:#34429B; font-weight: bold;'>2023-25</span> <b> Master de spécialisation en urbanisme et aménagement du territoire</b> – ULB Bruxelles <button id='btn-more-master' class='btn small-btn' onclick="openEduPopup('master')">Plus</button></li>
       <li><span style='color:#34429B; font-weight: bold;'>2020</span> <b>Communication stratégique, branding, copywriting</b> – Pennamontata.com</li>
       <li><span style='color:#34429B; font-weight: bold;'>2019</span> <b>Méthodologie Visual Thinking</b> – Scribing.it</li>
       <li><span style='color:#34429B; font-weight: bold;'>2013-16</span> <b>Master en Architecture “Costruzione città”</b> – Politecnico de Turin <button id='btn-more-arch' class='btn small-btn' onclick="openEduPopup('arch')">Plus</button></li>
     </ul>`,
+    cvDownload: "Télécharger CV",
+    cvFile: "cv_chiara_zotti_fr.pdf",
+    tagline: "Approche interculturelle – Droit à la ville – Urbanisme transitoire",
+    about: "J’ai plusieurs années d’expérience dans l’éducation et la communication interculturelles. Architecte de formation, je me suis spécialisée en urbanisme et j’ai récemment complété un Master de spécialisation en urbanisme et aménagement du territoire à l’Université Libre de Bruxelles, en me concentrant sur les occupations temporaires, le droit à la ville et la collaboration entre administrations et citoyens. <br> J’aime m’immerger dans de nouveaux environnements et échanger avec les communautés. Mon objectif est d’appliquer cette perspective interdisciplinaire à des projets à l’intersection de la recherche, de l’action publique et de l’engagement citoyen.",
+    "exp-title": "Expérience professionnelle",
+    experience: "j'ai travaille...",
+    "edu-title": "Formation",
+    formation: "Master",
     skillsLabel: "Compétences",
     languagesLabel: "Langues:",
     softwaresLabel: "Logiciels:",
-    languagesList: `
-      <span class="tooltip">🇮🇹<span class="tooltiptext">Née et grandie à Turin. Je me sens chez moi quand je suis proche des Alpes.</span></span>
-      <span class="tooltip">🇫🇷<span class="tooltiptext">Bruxelles est chez moi depuis 2023. J'ai commencé à apprendre le français ici et je continue chaque jour.</span></span>
-      <span class="tooltip">🇬🇧<span class="tooltiptext">J'ai toujours étudié et travaillé en anglais.</span></span>
-      <span class="tooltip">🇸🇪<span class="tooltiptext">J'ai été étudiante d'échange en 2008-09 en Suède. J'ai vécu un an avec une famille suédoise au nord du Cercle Polaire où j'ai appris la langue et la culture.</span></span>
-      <span class="tooltip">🇵🇹<span class="tooltiptext">En 2021, j'ai déménagé à Lisbonne où je suis restée un an. En travaillant à distance, j'ai profité de l'océan, de la musique et appris le portugais.</span></span>
-      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: roboto mono, monospace; background:#34429B;">Et plus encore !</span></span>
-    `,
+    languagesList: `<span class="tooltip">🇮🇹<span class="tooltiptext">Née et grandie à Turin. Je me sens chez moi quand je suis proche des Alpes</span></span>
+      <span class="tooltip">🇫🇷<span class="tooltiptext">Bruxelles est chez moi depuis 2023. J'ai commencé à apprendre le français ici et je continue chaque jour</span></span>
+      <span class="tooltip">🇬🇧<span class="tooltiptext">(Rien d'intéressant ici. J'ai toujours étudié et travaillé en anglais)</span></span>
+      <span class="tooltip">🇸🇪<span class="tooltiptext">J'ai été étudiante à l'étranger en 2008-09 en Suède. J'ai vécu un an avec une famille suédoise au-dessus du Cercle Polaire Arctique, où j'ai appris la langue et vécu l'hiver sombre et l'été sans nuit</span></span>
+      <span class="tooltip">🇵🇹<span class="tooltiptext">En 2021, j'ai déménagé à Lisbonne où je suis restée un an. En travaillant à distance, j'ai profité de l'océan, de la musique et d'une grande famille portugaise avec qui j'ai appris la langue (niveau intermédiaire)</span></span>
+      <span class="tooltip" style="font-family: roboto mono, monospace; background-color:white; border: 1px solid #F68A25; color:#F68A25; font-weight: normal;">?<span class="tooltiptext" style="font-family: timeless; font-weight: normal;">...quelle sera la prochaine?</span></span>`,
     softwaresList: "Adobe Id, Ai, Ps; Wordpress; QGIS; AutoCAD; MS Office / Mac OS",
-    cvDownload: "Télécharger CV",
-    cvFile: "cv_chiara_zotti_fr.pdf",
-    eduPopupTitle: `Titre du mémoire :<br>“Permanent perspectives in temporary occupations. Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development”`,
-    eduPopupText: `Que reste-t-il lorsqu’une occupation temporaire prend fin ?<br>Ce mémoire analyse les résultats des occupations temporaires à Bruxelles, en explorant comment institutions publiques, associations et acteurs informels influencent les transitions urbaines à long terme.`,
-    eduPopupFile: "Chiara Zotti_Mémoire ULB.pdf",
-    eduPopupDownload: "Télécharger le mémoire",
-    archPopupTitle: `Titre de thèse :<br>“Comunicare l’architettura: non solo visione. Parcours de visite tactile du Château du Valentino pour déficients visuels”<br>“Communiquer l’architecture: pas seulement la vision. Parcours tactile au Château du Valentino”`,
-    archPopupText: `Cette thèse explore comment les personnes malvoyantes peuvent percevoir et comprendre l’architecture par des sens autres que la vue. À partir de l’atelier « Drawings for hands. The Valentino Castle », elle propose des approches multisensorielles à la communication architecturale.`,
-    archPopupFile: "Chiara Zotti_Tesi Politecnico.pdf",
-    archPopupDownload: "Télécharger la thèse",
-    "about-title": "À propos"
+  eduPopupTitle: `Titre du mémoire : <br> “Permanent perspectives in temporary occupations. <br> Exploring the role of public policies in guiding long-term prefiguration of Brussels urban development” <br> “Perspectives permanentes dans les occupations temporaires. <br> Explorer le rôle des politiques publiques dans l’orientation de la préfiguration à long terme du développement urbain de Bruxelles”`,
+  eduPopupText: `Que reste-t-il lorsqu’une occupation temporaire prend fin ? <br>Ce mémoire analyse les résultats des occupations temporaires à Bruxelles, en explorant comment les institutions publiques, les associations et les groupes informels façonnent et soutiennent ces pratiques. À travers des études de cas et du travail de terrain, il examine comment la temporalité est définie, mise en œuvre et reliée à la planification urbaine à long terme. La recherche met en lumière le rôle des politiques publiques et propose des stratégies pour planifier et évaluer les usages temporaires, en plaidant pour un accompagnement intentionnel des transitions vers la permanence.`,
+  eduPopupFile: "Chiara Zotti_Mémoire ULB.pdf",
+  eduPopupDownload: "Télécharger le mémoire",
+  archPopupTitle: `Titre de thèse: <br> “Comunicare l’architettura: non solo visione. <br> Percorso di visita del Castello del Valentino per le disabilità visive” <br> “Communiquer l’architecture: plus qu’avec les yeux. <br> Parcours de visite du château du Valentino pour les personnes malvoyantes”`,
+  archPopupText: `Cette thèse explore comment les personnes malvoyantes peuvent percevoir et comprendre l’architecture par des sens autres que la vue. À partir de l’atelier « Drawings for hands. Le château du Valentino en relief » à l’Université Polytechnique de Turin, l’étude examine les expériences haptiques et tactiles comme outils de conception inclusive. Elle combine analyse théorique des barrières perceptives et études de cas pratiques, et aboutit à une proposition pour une visite plus accessible du château du Valentino. Le projet « The Guide for the Guide » fournit aux guides de musée des outils pédagogiques pour améliorer l’expérience de tous les visiteurs, démontrant que concevoir pour l’inclusion profite à tous.`,
+  archPopupFile: "Chiara Zotti_Tesi Politecnico.pdf", 
+  archPopupDownload: "Télécharger la thèse",
+  "about-title": "À propos",
+
   }
 };
-
 function setLang(lang){
   currentLang = lang;
   document.getElementById("header-title").innerText = content[lang]["header-title"];
@@ -451,7 +514,7 @@ function setLang(lang){
   document.getElementById("about-text").innerHTML = content[lang].about;
   document.getElementById("exp-title").innerText = content[lang]["exp-title"];
   document.getElementById("experience-list").innerHTML = content[lang].experienceList;
-  document.getElementById("edu-title").innerText = content[lang]["edu-title"] || content[lang]["education-title"];
+  document.getElementById("edu-title").innerText = content[lang]["edu-title"];
   document.getElementById("education-list").innerHTML = content[lang].educationList;
   document.getElementById("skills-title").innerText = content[lang].skillsLabel;
   document.getElementById("languages-label").innerText = content[lang].languagesLabel;
@@ -481,6 +544,22 @@ function setLang(lang){
   }
 }
 
+// Slider
+let currentSlide=0;
+function showSlide(index){
+  const slides=document.getElementById("slides");
+  if(index<0) index=slides.children.length-1;
+  if(index>=slides.children.length) index=0;
+  slides.style.transform=`translateX(${-index*100}%)`;
+  currentSlide=index;
+}
+function prevSlide(){showSlide(currentSlide-1);}
+function nextSlide(){showSlide(currentSlide+1);}
+showSlide(0);
+</script>
+
+<script>
+// Imposta la lingua inglese come default all'avvio
 document.addEventListener('DOMContentLoaded', function() {
   setLang('en');
 });
@@ -488,3 +567,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
+
